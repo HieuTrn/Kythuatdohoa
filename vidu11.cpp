@@ -82,40 +82,40 @@ void makeWall() {
 	wall_t1 = point3(0, 0, -6);
 	wall_t2 = point3(0, 0, -8);
 }
-void makeName() {
-	name.nVertices = 26;
-	name.vertices[0] = point3(-0.8, 0.3, 0);
-	name.vertices[1] = point3(-0.8, 0.7, 0);
-	name.vertices[2] = point3(-0.9, 0.7, 0);
-	name.vertices[3] = point3(-0.7, 0.7, 0);
-	name.vertices[4] = point3(-0.6, 0.7, 0);
-	name.vertices[5] = point3(-0.4, 0.7, 0);
-	name.vertices[6] = point3(-0.4, 0.7, 0);
-	name.vertices[7] = point3(-0.4, 0.3, 0);
-	name.vertices[8] = point3(-0.4, 0.3, 0);
-	name.vertices[9] = point3(-0.6, 0.3, 0);
-	name.vertices[10] = point3(-0.6, 0.3, 0);
-	name.vertices[11] = point3(-0.6, 0.7, 0);
-	name.vertices[12] = point3(-0.3, 0.3, 0);
-	name.vertices[13] = point3(-0.2, 0.7, 0);
-	name.vertices[14] = point3(-0.2, 0.7, 0);
-	name.vertices[15] = point3(-0.1, 0.3, 0);
-	name.vertices[16] = point3(-0.25, 0.5, 0);
-	name.vertices[17] = point3(-0.15, 0.5, 0);
-	name.vertices[18] = point3(0.0, 0.3, 0);
-	name.vertices[19] = point3(0.0, 0.7, 0);
-	name.vertices[20] = point3(0.0, 0.7, 0);
-	name.vertices[21] = point3(0.2, 0.3, 0);
-	name.vertices[22] = point3(0.2, 0.3, 0);
-	name.vertices[23] = point3(0.2, 0.7, 0);
-	name.vertices[24] = point3(-0.25, 0.85, 0);
-	name.vertices[25] = point3(-0.15, 0.8, 0);
-	name.nEdges = 25;
-	for (int i = 0; i < 25; i++) {
-		name.edges[i][0] = i * 2;
-		name.edges[i][1] = i * 2 + 1;
-	}
-}
+//void makeName() {
+//	name.nVertices = 26;
+//	name.vertices[0] = point3(-0.8, 0.3, 0);
+//	name.vertices[1] = point3(-0.8, 0.7, 0);
+//	name.vertices[2] = point3(-0.9, 0.7, 0);
+//	name.vertices[3] = point3(-0.7, 0.7, 0);
+//	name.vertices[4] = point3(-0.6, 0.7, 0);
+//	name.vertices[5] = point3(-0.4, 0.7, 0);
+//	name.vertices[6] = point3(-0.4, 0.7, 0);
+//	name.vertices[7] = point3(-0.4, 0.3, 0);
+//	name.vertices[8] = point3(-0.4, 0.3, 0);
+//	name.vertices[9] = point3(-0.6, 0.3, 0);
+//	name.vertices[10] = point3(-0.6, 0.3, 0);
+//	name.vertices[11] = point3(-0.6, 0.7, 0);
+//	name.vertices[12] = point3(-0.3, 0.3, 0);
+//	name.vertices[13] = point3(-0.2, 0.7, 0);
+//	name.vertices[14] = point3(-0.2, 0.7, 0);
+//	name.vertices[15] = point3(-0.1, 0.3, 0);
+//	name.vertices[16] = point3(-0.25, 0.5, 0);
+//	name.vertices[17] = point3(-0.15, 0.5, 0);
+//	name.vertices[18] = point3(0.0, 0.3, 0);
+//	name.vertices[19] = point3(0.0, 0.7, 0);
+//	name.vertices[20] = point3(0.0, 0.7, 0);
+//	name.vertices[21] = point3(0.2, 0.3, 0);
+//	name.vertices[22] = point3(0.2, 0.3, 0);
+//	name.vertices[23] = point3(0.2, 0.7, 0);
+//	name.vertices[24] = point3(-0.25, 0.85, 0);
+//	name.vertices[25] = point3(-0.15, 0.8, 0);
+//	name.nEdges = 25;
+//	for (int i = 0; i < 25; i++) {
+//		name.edges[i][0] = i * 2;
+//		name.edges[i][1] = i * 2 + 1;
+//	}
+//}
 void makeRoof() {
 	roof.clear();
 	roof.setTextureFromBMP("data/roof.bmp");
@@ -303,8 +303,8 @@ void init() {
 	makeRoof();
 	makeDoor();
 	makeWindow();
-	//makeWallside();
-	makeName();
+	makeWallside();
+	//makeName();
 }
 int main(int argc, char** argv) {
 glutInitDisplayMode(/*GLUT_DOUBLE | GLUT_RGBA | */GLUT_DEPTH);

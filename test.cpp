@@ -6,8 +6,8 @@
 
 namespace test {
 
-    TextureModel Wall, Wallside, sannha, sannhath, skyTop;
-    Vector3 wall1_pos, wall2_pos, wall3_pos, wall4_pos, sannha_pos, sannhath_pos, skyTop_pos;
+    TextureModel Cube, Wall, Wallside, sannha, sannhath, skyTop, loidi,loidi1;
+    Vector3 wall1_pos, wall2_pos, wall3_pos, wall4_pos, sannha_pos, sannhath_pos, skyTop_pos, loidi_pos, loidi1_pos, cube_pos;
 
     float camX = 5.0f, camZ = 55.0f; // Vị trí bắt đầu của camera
     float lx = 0.0f, lz = -1.0f;     // Vector hướng nhìn ban đầu (nhìn dọc theo trục -Z)
@@ -38,12 +38,34 @@ namespace test {
     void drawsannha() {
         sannha.clear();
         sannha.setTextureFromBMP("data/nen.bmp");
-        sannha.addVertex(point3(0, 0, 0));
-        sannha.addVertex(point3(50, 0, 0));
-        sannha.addVertex(point3(50, 0, 50));
-        sannha.addVertex(point3(0, 0, 50));
-        sannha.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 50), texCoord2(50, 50), texCoord2(50, 0), texCoord2(0, 0)));
-        sannha_pos = point3(0.0f, -0.01f, 0.0f);
+        sannha.addVertex(point3(-30, 0, 30));
+        sannha.addVertex(point3(30, 0, 30));
+        sannha.addVertex(point3(30, 0, -30));
+        sannha.addVertex(point3(-30, 0, -30));
+        sannha.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 10), texCoord2(10, 10), texCoord2(0, 10), texCoord2(0, 0)));
+        sannha_pos = point3(0.0f, 0.0f, 0.0f);
+    }
+    
+    void makeloidi() {
+        loidi.clear();
+        loidi.setTextureFromBMP("data/nen.bmp");
+        loidi.addVertex(point3(-5, 3, 5));
+        loidi.addVertex(point3(5, 0, 5));
+        loidi.addVertex(point3(5, 0, -5));
+        loidi.addVertex(point3(-5, 3, -5));
+        loidi.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(5, 0), texCoord2(5, 5), texCoord2(0, 5)));
+        loidi_pos = point3(20.0, 0.0, 20.0);
+    }
+
+    void makeloidi1() {
+        loidi1.clear();
+        loidi1.setTextureFromBMP("data/nen.bmp");
+        loidi1.addVertex(point3(-25, 3, 5));
+        loidi1.addVertex(point3(5, 3, 5));
+        loidi1.addVertex(point3(5, 3, -5));
+        loidi1.addVertex(point3(-25, 3, -5));
+        loidi1.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(5, 0), texCoord2(5, 5), texCoord2(0, 5)));
+        loidi1_pos = point3(10.0, 0.0, 20.0);
     }
 
     void drawWall1() {
@@ -57,11 +79,11 @@ namespace test {
 
 		Wallside.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
-        wall1_pos = point3(25.0, 3.0, 25.0);
-        wall2_pos = point3(25.0, 3.0, -5.0);
+        wall1_pos = point3(0.0, 3.0, 0.0);
+        wall2_pos = point3(0.0, 3.0, -30.0);
     }
 
-    void drawWall2() {
+    void drawWallside() {
 		Wall.clear();
 		Wall.setTextureFromBMP("data/wall.bmp");
 
@@ -72,8 +94,8 @@ namespace test {
 
 		Wall.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
-		wall3_pos = point3(25.0, 3.0, 25.0);
-		wall4_pos = point3(-5.0, 3.0, 25.0);
+		wall3_pos = point3(0.0, 3.0, 0.0);
+		wall4_pos = point3(-30.0, 3.0, 0.0);
     }
 
     void drawsannhath() {
@@ -85,9 +107,9 @@ namespace test {
         sannhath.addVertex(point3(30.0, 0, 30.0));
         sannhath.addVertex(point3(30.0, 0, 0));
 
-        sannhath.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 10), texCoord2(10, 10), texCoord2(10, 0), texCoord2(0, 0)));
+        sannhath.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(5, 0), texCoord2(5, 5), texCoord2(0, 5)));
 
-        sannhath_pos = point3(10.0, 3.0, 10.0);
+        sannhath_pos = point3(-15.0, 3.0, -15.0);
     }
 
     void resize(int width, int height) {
@@ -103,32 +125,32 @@ namespace test {
     }
 
 
-    //void drawCube() {
-    //    Cube.clear();
-    //    Cube.setTextureFromBMP("data/bricks.bmp");
+    void drawCube() {
+        Cube.clear();
+        Cube.setTextureFromBMP("data/bricks.bmp");
 
-    //    // Mặt trước (Z = 1)
-    //    Cube.addVertex(point3(-0.5, -0.5, 0.5)); // 0: Dưới trái
-    //    Cube.addVertex(point3(0.5, -0.5, 0.5)); // 1: Dưới phải
-    //    Cube.addVertex(point3(0.5, 0.5, 0.5)); // 2: Trên phải
-    //    Cube.addVertex(point3(-0.5, 0.5, 0.5)); // 3: Trên trái
+        // Mặt trước (Z = 1)
+        Cube.addVertex(point3(-0.5, -0.5, 0.5)); // 0: Dưới trái
+        Cube.addVertex(point3(0.5, -0.5, 0.5)); // 1: Dưới phải
+        Cube.addVertex(point3(0.5, 0.5, 0.5)); // 2: Trên phải
+        Cube.addVertex(point3(-0.5, 0.5, 0.5)); // 3: Trên trái
 
-    //    // Mặt sau (Z = -1)
-    //    Cube.addVertex(point3(-0.5, -0.5, -0.5)); // 4: Dưới trái
-    //    Cube.addVertex(point3(0.5, -0.5, -0.5)); // 5: Dưới phải
-    //    Cube.addVertex(point3(0.5, 0.5, -0.5)); // 6: Trên phải
-    //    Cube.addVertex(point3(-0.5, 0.5, -0.5)); // 7: Trên trái
+        // Mặt sau (Z = -1)
+        Cube.addVertex(point3(-0.5, -0.5, -0.5)); // 4: Dưới trái
+        Cube.addVertex(point3(0.5, -0.5, -0.5)); // 5: Dưới phải
+        Cube.addVertex(point3(0.5, 0.5, -0.5)); // 6: Trên phải
+        Cube.addVertex(point3(-0.5, 0.5, -0.5)); // 7: Trên trái
 
-    //    // --- 6 MẶT (Quads) ---
-    //    Cube.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Trước
-    //    Cube.addQuad(quadIndex(5, 4, 7, 6, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Sau
-    //    Cube.addQuad(quadIndex(3, 2, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Trên
-    //    Cube.addQuad(quadIndex(4, 5, 1, 0, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Dưới
-    //    Cube.addQuad(quadIndex(1, 5, 6, 2, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Phải
-    //    Cube.addQuad(quadIndex(4, 0, 3, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Trái
+        // --- 6 MẶT (Quads) ---
+        Cube.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Trước
+        Cube.addQuad(quadIndex(5, 4, 7, 6, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Sau
+        Cube.addQuad(quadIndex(3, 2, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Trên
+        Cube.addQuad(quadIndex(4, 5, 1, 0, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Dưới
+        Cube.addQuad(quadIndex(1, 5, 6, 2, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Phải
+        Cube.addQuad(quadIndex(4, 0, 3, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // Trái
 
-    //    cube_pos = point3(20.0, 0.0, 20.0);
-    //}
+        cube_pos = point3(20.0, 0.0, 20.0);
+    }
 
     void display()
     {
@@ -150,6 +172,10 @@ namespace test {
         draw(&Wall, wall4_pos);
 		draw(&sannha, sannha_pos);
 		draw(&sannhath, sannhath_pos);
+		draw(&loidi, loidi_pos);
+		draw(&loidi1, loidi1_pos);
+        draw(&Cube, cube_pos);
+		draw(&skyTop, skyTop_pos);
 
         glPopMatrix();
         glutSwapBuffers();
@@ -223,9 +249,13 @@ namespace test {
         glEnable(GL_TEXTURE_2D);
 
         drawWall1();
-        drawWall2();
+        drawWallside();
 		drawsannhath();
 		drawsannha();
+		makeloidi();
+		makeloidi1();
+		makeSkyTop();
+        drawCube();
 
         lx = cos(angle);
         lz = sin(angle);
