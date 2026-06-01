@@ -6,8 +6,11 @@
 
 namespace test {
 
-    TextureModel Cube, Wall, Wallside, sannha, sannhath, skyTop, loidi,loidi1;
-    Vector3 wall1_pos, wall2_pos, wall3_pos, wall4_pos, sannha_pos, sannhath_pos, skyTop_pos, loidi_pos, loidi1_pos, cube_pos;
+    TextureModel Cube, Wall, Wall1, sannha, sannhath, skyTop, loidi, loidi1, window, windowt;
+    Vector3 wall1_pos, wall2_pos, wall3_pos, wall4_pos, 
+        sannha_pos, sannhath_pos, 
+        skyTop_pos, loidi_pos, loidi1_pos, cube_pos, 
+        window_pos, window1_pos, window2_pos, window3_pos, windowa_pos, windowb_pos, windowc_pos, windowd_pos;
 
     float camX = 5.0f, camZ = 55.0f; // Vị trí bắt đầu của camera
     float lx = 0.0f, lz = -1.0f;     // Vector hướng nhìn ban đầu (nhìn dọc theo trục -Z)
@@ -69,15 +72,15 @@ namespace test {
     }
 
     void drawWall1() {
-		Wallside.clear();
-		Wallside.setTextureFromBMP("data/wall.bmp");
+		Wall1.clear();
+        Wall1.setTextureFromBMP("data/wall.bmp");
 
-		Wallside.addVertex(point3(-15.0, 0.0, 15.0)); // 0: Dưới trái
-        Wallside.addVertex(point3(15.0, 0.0, 15.0));
-        Wallside.addVertex(point3(15.0, 10.0, 15.0));
-		Wallside.addVertex(point3(-15.0, 10.0, 15.0));
+        Wall1.addVertex(point3(-15.0, 0.0, 15.0)); // 0: Dưới trái
+        Wall1.addVertex(point3(15.0, 0.0, 15.0));
+        Wall1.addVertex(point3(15.0, 10.0, 15.0));
+        Wall1.addVertex(point3(-15.0, 10.0, 15.0));
 
-		Wallside.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        Wall1.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
         wall1_pos = point3(0.0, 3.0, 0.0);
         wall2_pos = point3(0.0, 3.0, -30.0);
@@ -85,7 +88,7 @@ namespace test {
 
     void drawWallside() {
 		Wall.clear();
-		Wall.setTextureFromBMP("data/wall.bmp");
+		Wall.setTextureFromBMP("data/trangtri.bmp");
 
 		Wall.addVertex(point3(15.0, 0, 15.0)); // 0: Dưới trái
         Wall.addVertex(point3(15.0, 0, -15.0));
@@ -96,6 +99,28 @@ namespace test {
 
 		wall3_pos = point3(0.0, 3.0, 0.0);
 		wall4_pos = point3(-30.0, 3.0, 0.0);
+    }
+    
+    void drawwindow() {
+		window.clear();
+        window.setTextureFromBMP("data/glass.bmp");
+
+        window.addVertex(point3(4.0, 0, 2.0)); // 0: Dưới trái
+        window.addVertex(point3(4.0, 0, -2.0));
+        window.addVertex(point3(4.0, 10.0, -2.0));
+        window.addVertex(point3(4.0, 10.0, 2.0));
+
+        window.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+
+		windowa_pos = point3(11.1f, 3.0f, -13.0f);
+		windowb_pos = point3(11.1f, 3.0f, -4.5f);
+		windowc_pos = point3(11.1f, 3.0f, 4.5f);
+		windowd_pos = point3(11.1f, 3.0f, 13.0f);
+
+		window_pos = point3(-19.1f, 3.0f, -13.0f);
+		window1_pos = point3(-19.1f, 3.0f, -4.5f);
+		window2_pos = point3(-19.1f, 3.0f, 4.5f);
+		window3_pos = point3(-19.1f, 3.0f, 13.0f);
     }
 
     void drawsannhath() {
@@ -166,15 +191,23 @@ namespace test {
 
 		glPushMatrix();
         glColor3f(1.0f, 1.0f, 1.0f);
-		draw(&Wallside, wall1_pos);
-        draw(&Wallside, wall2_pos);
+		draw(&Wall1, wall1_pos);
+        draw(&Wall1, wall2_pos);
         draw(&Wall, wall3_pos);
         draw(&Wall, wall4_pos);
+		draw(&window, window_pos);
+		draw(&window, windowa_pos);
+		draw(&window, windowb_pos);
+		draw(&window, windowc_pos);
+		draw(&window, windowd_pos);
+		draw(&window, window1_pos);
+		draw(&window, window2_pos);
+		draw(&window, window3_pos);
 		draw(&sannha, sannha_pos);
 		draw(&sannhath, sannhath_pos);
 		draw(&loidi, loidi_pos);
 		draw(&loidi1, loidi1_pos);
-        draw(&Cube, cube_pos);
+        //draw(&Cube, cube_pos);
 		draw(&skyTop, skyTop_pos);
 
         glPopMatrix();
@@ -250,6 +283,7 @@ namespace test {
 
         drawWall1();
         drawWallside();
+        drawwindow();
 		drawsannhath();
 		drawsannha();
 		makeloidi();

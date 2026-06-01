@@ -1,7 +1,7 @@
 ﻿#include "main.h"
 
 int main(int argc, char** argv) {
-	return test1::main(argc, argv);
+	return ntdhau::main(argc, argv);
 }
 
 /*

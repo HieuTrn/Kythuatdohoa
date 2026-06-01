@@ -1,396 +1,362 @@
 #include <glut.h>
+#include "imageloader.h"
 #include "texturemodel.h"
 #include "linedmodel.h"
 #include <math.h>
-#include <stdlib.h>
-// FIX NGAY: TUONG NGOAI BI SAI TEXTURE , VAO TRONG BI MAT NGOI , LOI CHUA XOAY DUOC CAMERA
-// FIX NGAY: TUONG NGOAI BI SAI TEXTURE , VAO TRONG BI MAT NGOI , LOI CHUA XOAY DUOC CAMERA
-// FIX NGAY: TUONG NGOAI BI SAI TEXTURE , VAO TRONG BI MAT NGOI , LOI CHUA XOAY DUOC CAMERA
-// FIX NGAY: TUONG NGOAI BI SAI TEXTURE , VAO TRONG BI MAT NGOI , LOI CHUA XOAY DUOC CAMERA
-// FIX NGAY: TUONG NGOAI BI SAI TEXTURE , VAO TRONG BI MAT NGOI , LOI CHUA XOAY DUOC CAMERA
-// FIX NGAY	: TUONG NGOAI BI SAI TEXTURE , VAO TRONG BI MAT NGOI , LOI CHUA XOAY DUOC CAMERA
-
-#ifndef PI
-#define PI 3.14159265358979323846
-#endif
 
 namespace ntdhau {
 
-	float camX = 5.0f, camZ = 15.0f; // Vị trí bắt đầu của camera
-	float lx = 0.0f, lz = -1.0f;     // Vector hướng nhìn ban đầu (nhìn dọc theo trục -Z)
-	float angle = -1.5f;           // Góc nhìn ngang (bắt đầu hướng về phía -Z)
-	float speed = 0.5f;              // Tốc độ di chuyển
-	float heightAngle = -0.3f;       // Góc nhìn dọc (hơi cúi xuống để nhìn thấy lưới)
-	float height_view = -0.3f;
+    TextureModel MoHinh_Tuong1, MoHinh_Tuong2, MoHinh_SanNha, MoHinh_SanGo, MoHinh_BauTroi, MoHinh_cot, MoHinh_CauThang, Kinh, Cua;
 
-// Quy uoc ten ngan:
-// m... la model, p... la vi tri, w/h/d la rong/cao/sau.
-const float yDat = -1.5f;
-const float zTrc = -14.0f;
-const float zSau = -27.0f;
-const float zTam = (zTrc + zSau) / 2.0f;
-const float wNha = 24.0f;
-const float dNha = zTrc - zSau;
+    Vector3 vitri_tuong1, vitri_tuong2, vitri_tuong3, vitri_tuong4, vitri_san_nha, vitri_san_go, vitri_bau_troi, vitri_cot[9], vitri_cau_thang, 
+        vitri_kinh, vitri_kinh1, vitri_kinh2, vitri_kinh3, vitri_kinh4, vitri_kinh5, vitri_cua;
 
-// Model nen moi truong.
-TextureModel mSky, mSkyTop, mCo;
+    float camera_X = 5.0f, camera_Z = 55.0f;
+    float vector_huong_X = 0.0f, vector_huong_Z = -1.0f;
+    float goc_quay_ngang = -1.5f;
+    float toc_do_di_chuyen = 0.5f;
+    float goc_quay_doc = 0.0f;
+    float do_cao_huong_nhin = -0.3f;
 
-// Model phan than nha: tuong duoc tach rieng de giua mat tien co cua vao.
-TextureModel mTuongTrc, mTuongTren, mTuongSau, mTuongTrai, mTuongPhai;
+    void ve_mo_hinh(TextureModel* mo_hinh, Vector3 toa_do) {
+        glPushMatrix();
+        glTranslatef(toa_do.x, toa_do.y, toa_do.z);
+        mo_hinh->draw();
+        glPopMatrix();
+    }
+    void tao_bau_troi() {
+        MoHinh_BauTroi.clear();
+        MoHinh_BauTroi.setTextureFromBMP("data/sky.bmp");
 
-// Model mat tien: kinh, cua so, chan tuong xam va khung cua.
-TextureModel mKinh, mLam, mCsCao, mCsNho;
-TextureModel mChanBen, mChanSau;
-TextureModel mKhungBen, mKhungTren;
+        MoHinh_BauTroi.addVertex(point3(-100, 100, -100));//0
+        MoHinh_BauTroi.addVertex(point3(100, 100, -100));//1
+        MoHinh_BauTroi.addVertex(point3(100, 100, 100));//2
+        MoHinh_BauTroi.addVertex(point3(-100, 100, 100));//3
 
-// Model ben trong va mai.
-TextureModel mMai, mDauMai;
-TextureModel mSan, mDuong;
+        MoHinh_BauTroi.addVertex(point3(-100, -1, -100));//4
+        MoHinh_BauTroi.addVertex(point3(100, -1, -100));
+        MoHinh_BauTroi.addVertex(point3(100, -1, 100));
+        MoHinh_BauTroi.addVertex(point3(-100, -1, 100));
 
-Vector3 pSky, pSkyTop, pCo;
-Vector3 pTuongTrcTrai, pTuongTrcPhai, pTuongTren;
-Vector3 pTuongSau, pTuongTrai, pTuongPhai;
-Vector3 pKinhTrai, pKinhPhai, pLam;
-Vector3 pChanTrai, pChanPhai, pChanSau;
-Vector3 pMai, pDauMai;
-Vector3 pSan, pDuong;
-Vector3 pKhungTrai, pKhungPhai, pKhungTren;
+        MoHinh_BauTroi.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_BauTroi.addQuad(quadIndex(4, 5, 1, 0, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_BauTroi.addQuad(quadIndex(4, 5, 6, 7, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_BauTroi.addQuad(quadIndex(5, 6, 2, 1, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_BauTroi.addQuad(quadIndex(4, 7, 3, 0, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_BauTroi.addQuad(quadIndex(6, 7, 3, 2, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
 
-void ve(TextureModel* m, Vector3 p) {
-	glPushMatrix();
-	glTranslatef(p.x, p.y, p.z);
-	m->draw();
-	glPopMatrix();
-}
+        vitri_bau_troi = point3(0, 0, 0);
+    }
 
-void veMau(TextureModel* m, Vector3 p, float r, float g, float b) {
-	glColor3f(r, g, b);
-	ve(m, p);
-	glColor3f(1.0f, 1.0f, 1.0f);
-}
+    void tao_kinh() {
+        Kinh.clear();
+        Kinh.setTextureFromBMP("data/glass1.bmp");
+        Kinh.addVertex(point3(0.0f, 0.0f, 3.0f));
+        Kinh.addVertex(point3(0.0f, 0.0f, -3.0f));
+        Kinh.addVertex(point3(0.0f, 10.0f, -3.0f));
+        Kinh.addVertex(point3(0.0f, 10.0f, 3.0f));
+		Kinh.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+		vitri_kinh = point3(15.1f, 3.0f, 12.0f);
+		vitri_kinh1 = point3(15.1f, 3.0f, 0.0f);
+		vitri_kinh2 = point3(15.1f, 3.0f, -12.0f);
+		vitri_kinh3 = point3(-15.1f, 3.0f, 12.0f);
+		vitri_kinh4 = point3(-15.1f, 3.0f, 0.0f);
+		vitri_kinh5 = point3(-15.1f, 3.0f, -12.0f);
+    }
+    
+    void tao_cua() {
+        Cua.clear();
+        Cua.setTextureFromBMP("data/door3.bmp");
+        Cua.addVertex(point3(-2.5f, 0.0f, 0.0f));
+        Cua.addVertex(point3(2.5f, 0.0f, 0.0f));
+        Cua.addVertex(point3(2.5f, 5.0f, 0.0f));
+        Cua.addVertex(point3(-2.5f, 5.0f, 0.0f));
+        Cua.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+		vitri_cua = point3(10.0f, 3.0f, 15.1f);
+    }
 
-// Tao model dang hop chu nhat co day du 6 mat.
-// Dung cho tuong, khung cua, mang kinh, chan tuong va cac khoi don gian.
-void taoHop(TextureModel* m, const char* tex, float w, float h, float d, float rx, float ry) {
-	m->clear();
-	m->setTextureFromBMP(tex);
+    void tao_san_nha() {
+        MoHinh_SanNha.clear();
+        MoHinh_SanNha.setTextureFromBMP("data/nen.bmp");
+        MoHinh_SanNha.addVertex(point3(100, 0, 100));
+        MoHinh_SanNha.addVertex(point3(100, 0, -100));
+        MoHinh_SanNha.addVertex(point3(-100, 0, -100));
+        MoHinh_SanNha.addVertex(point3(-100, 0, 100));
+        MoHinh_SanNha.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 100), texCoord2(100, 100), texCoord2(100, 0), texCoord2(0, 0)));
+        vitri_san_nha = point3(0.0f, -0.01f, 0.0f);
+    }
 
-	float x1 = -w / 2.0f;
-	float x2 = w / 2.0f;
-	float y1 = 0.0f;
-	float y2 = h;
-	float z1 = -d / 2.0f;
-	float z2 = d / 2.0f;
+    void tao_tuong_2() {
+        MoHinh_Tuong2.clear();
+        MoHinh_Tuong2.setTextureFromBMP("data/wall.bmp");
+        MoHinh_Tuong2.addVertex(point3(-15.0, 0.0, 0));
+        MoHinh_Tuong2.addVertex(point3(15.0, 0.0, 0));
+        MoHinh_Tuong2.addVertex(point3(15.0, 10.0, 0));
+        MoHinh_Tuong2.addVertex(point3(-15.0, 10.0, 0));
+        MoHinh_Tuong2.addVertex(point3(-15.0, 0, -30.0));
+        MoHinh_Tuong2.addVertex(point3(-15.0, 10.0, -30.0));
+        MoHinh_Tuong2.addVertex(point3(15.0, 10.0, -30.0));
+        MoHinh_Tuong2.addVertex(point3(15.0, 0, -30.0));
 
-	m->addVertex(point3(x1, y1, z2)); // 0: truoc trai duoi
-	m->addVertex(point3(x2, y1, z2)); // 1: truoc phai duoi
-	m->addVertex(point3(x2, y2, z2)); // 2: truoc phai tren
-	m->addVertex(point3(x1, y2, z2)); // 3: truoc trai tren
-	m->addVertex(point3(x1, y1, z1)); // 4: sau trai duoi
-	m->addVertex(point3(x2, y1, z1)); // 5: sau phai duoi
-	m->addVertex(point3(x2, y2, z1)); // 6: sau phai tren
-	m->addVertex(point3(x1, y2, z1)); // 7: sau trai tren
+        MoHinh_Tuong2.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_Tuong2.addQuad(quadIndex(0, 1, 7, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_Tuong2.addQuad(quadIndex(0, 3, 5, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_Tuong2.addQuad(quadIndex(5, 4, 7, 6, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_Tuong2.addQuad(quadIndex(7, 6, 2, 1, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
-	m->addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, ry), texCoord2(0, ry)));
-	m->addQuad(quadIndex(5, 4, 7, 6, texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, ry), texCoord2(0, ry)));
-	m->addQuad(quadIndex(4, 0, 3, 7, texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, ry), texCoord2(0, ry)));
-	m->addQuad(quadIndex(1, 5, 6, 2, texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, ry), texCoord2(0, ry)));
-	m->addQuad(quadIndex(3, 2, 6, 7, texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, ry), texCoord2(0, ry)));
-	m->addQuad(quadIndex(4, 5, 1, 0, texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, ry), texCoord2(0, ry)));
-}
+        vitri_tuong1 = point3(0, 3.0, 15.0);
+    }
 
-// Tao model mat phang nam ngang tren truc XZ.
-// Dung cho san co, san bong ro va duong vao.
-void taoMatXZ(TextureModel* m, const char* tex, float w, float d, float rx, float rz) {
-	m->clear();
-	m->setTextureFromBMP(tex);
+    void tao_cot() {
+        MoHinh_cot.clear();
+        MoHinh_cot.setTextureFromBMP("data/nen.bmp");
 
-	float x1 = -w / 2.0f;
-	float x2 = w / 2.0f;
-	float z1 = -d / 2.0f;
-	float z2 = d / 2.0f;
+        MoHinh_cot.addVertex(point3(1.0, 0, 1.0));
+        MoHinh_cot.addVertex(point3(1.0, 0, -1.0));
+        MoHinh_cot.addVertex(point3(-1.0, 0, -1.0));
+        MoHinh_cot.addVertex(point3(-1.0, 0, 1.0));
+        MoHinh_cot.addVertex(point3(1.0, 3, 1.0));
+        MoHinh_cot.addVertex(point3(1.0, 3, -1.0));
+        MoHinh_cot.addVertex(point3(-1.0, 3, -1.0));
+        MoHinh_cot.addVertex(point3(-1.0, 3, 1.0));
+        MoHinh_cot.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(0, 1, 4, 5, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(0, 3, 7, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(3, 7, 6, 2, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(1, 2, 6, 5, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(4, 5, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
-	m->addVertex(point3(x1, 0.0f, z2));
-	m->addVertex(point3(x2, 0.0f, z2));
-	m->addVertex(point3(x2, 0.0f, z1));
-	m->addVertex(point3(x1, 0.0f, z1));
-	m->addQuad(quadIndex(0, 1, 2, 3,
-		texCoord2(0, 0), texCoord2(rx, 0), texCoord2(rx, rz), texCoord2(0, rz)));
-}
+        vitri_cot[0] = point3(0, 0, 0);
+        vitri_cot[1] = point3(12, 0, 0);
+        vitri_cot[2] = point3(-12, 0, 0);
+        vitri_cot[3] = point3(0, 0, 12);
+        vitri_cot[4] = point3(0, 0, -12);
+        vitri_cot[5] = point3(12, 0, 12);
+        vitri_cot[6] = point3(12, 0, -12);
+        vitri_cot[7] = point3(-12, 0, 12);
+        vitri_cot[8] = point3(-12, 0, -12);
+    }
 
-// Tao mat phang nhung chi lay mot vung texture.
-// San bong ro dung ham nay de cat bo phan mau thua cua anh nenbongro.bmp.
-void taoMatXZCat(TextureModel* m, const char* tex, float w, float d, float s1, float t1, float s2, float t2) {
-	m->clear();
-	m->setTextureFromBMP(tex);
+    void tao_cau_thang() {
+        MoHinh_CauThang.clear();
+        MoHinh_CauThang.setTextureFromBMP("data/nen.bmp");
 
-	float x1 = -w / 2.0f;
-	float x2 = w / 2.0f;
-	float z1 = -d / 2.0f;
-	float z2 = d / 2.0f;
+        MoHinh_CauThang.addVertex(point3(-15.0, 3, 15.0)); //0
+        MoHinh_CauThang.addVertex(point3(-15.0, 3, 20.0)); //1
+        MoHinh_CauThang.addVertex(point3(15.0, 3, 20.0)); //2
+        MoHinh_CauThang.addVertex(point3(15.0, 3, 15.0)); //3
 
-	m->addVertex(point3(x1, 0.0f, z2));
-	m->addVertex(point3(x2, 0.0f, z2));
-	m->addVertex(point3(x2, 0.0f, z1));
-	m->addVertex(point3(x1, 0.0f, z1));
-	m->addQuad(quadIndex(0, 1, 2, 3, texCoord2(s1, t1), texCoord2(s2, t1), texCoord2(s2, t2), texCoord2(s1, t2)));
-}
+        MoHinh_CauThang.addVertex(point3(15.0, 0, 15.0));
+        MoHinh_CauThang.addVertex(point3(15.0, 0, 20));
 
-void taoSky() {
-	mSky.clear();
-	mSky.setTextureFromBMP("data/sky.bmp");
-	mSky.addVertex(point3(-100, -100, -100));
-	mSky.addVertex(point3(100, -100, -100));
-	mSky.addVertex(point3(-100, 100, -100));
-	mSky.addVertex(point3(100, 100, -100));
-	mSky.addVertex(point3(-100, -100, 100));
-	mSky.addVertex(point3(100, -100, 100));
-	mSky.addVertex(point3(-100, 100, 100));
-	mSky.addVertex(point3(100, 100, 100));
-	mSky.addQuad(quadIndex(2, 3, 1, 0, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
-	mSky.addQuad(quadIndex(6, 7, 5, 4, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
-	mSky.addQuad(quadIndex(2, 6, 4, 0, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
-	mSky.addQuad(quadIndex(3, 7, 5, 1, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_CauThang.addVertex(point3(19.0, 0, 15));
+        MoHinh_CauThang.addVertex(point3(19.0, 0, 20));
 
-	pSky = point3(0, 0, 0);
-}
+        MoHinh_CauThang.addVertex(point3(-15.0, 2, 15.0)); //8
+        MoHinh_CauThang.addVertex(point3(-15.0, 2, 20.0)); //9
+        MoHinh_CauThang.addVertex(point3(15.0, 2, 20.0)); //10
+        MoHinh_CauThang.addVertex(point3(15.0, 2, 15.0)); //11
 
-void taoSkyTop() {
-	mSkyTop.clear();
-	mSkyTop.setTextureFromBMP("data/skytop.bmp");
-	mSkyTop.addVertex(point3(-100, 100, -100));
-	mSkyTop.addVertex(point3(100, 100, -100));
-	mSkyTop.addVertex(point3(100, 100, 100));
-	mSkyTop.addVertex(point3(-100, 100, 100));
-	mSkyTop.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        MoHinh_CauThang.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(2, 3, 4, 5, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(3, 4, 6, 6, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(2, 5, 7, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(0, 1, 9, 8, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(3, 2, 10, 11, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(1, 2, 10, 9, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_CauThang.addQuad(quadIndex(0, 3, 11, 8, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
-	pSkyTop = point3(0, 0, 0);
-}
+        int vertex_index = 12;
 
-void taoCo() {
-	mCo.clear();
-	mCo.setTextureFromBMP("data/nen.bmp");
-	mCo.addVertex(point3(-100, yDat, 100));
-	mCo.addVertex(point3(100, yDat, 100));
-	mCo.addVertex(point3(100, yDat, -100));
-	mCo.addVertex(point3(-100, yDat, -100));
-	mCo.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(100, 0), texCoord2(100, 100), texCoord2(0, 100)));
+        float zz = 20.0f;
 
-	pCo = point3(0, 0, 0);
-}
+        for (int l = 0; l < 6; l++) {
+            float xx = 15.0f + (l * 0.5f);
+            float yy = 3.0f - (l * 0.5f);
 
-// Cac mang tuong cam duoc tach rieng de tao khoang cua vao o giua mat tien.
-void taoTuong() {
-	taoHop(&mTuongTrc, "data/wall.bmp", 9.9f, 4.10f, 0.18f, 2.0f, 1.0f);
-	taoHop(&mTuongTren, "data/wall.bmp", 4.5f, 2.95f, 0.18f, 1.0f, 1.0f);
-	taoHop(&mTuongSau, "data/wall.bmp", wNha + 0.2f, 5.0f, 0.18f, 4.0f, 1.0f);
-	taoHop(&mTuongTrai, "data/wall.bmp", 0.18f, 5.0f, dNha + 0.2f, 1.0f, 2.0f);
-	taoHop(&mTuongPhai, "data/wall.bmp", 0.18f, 5.0f, dNha + 0.2f, 1.0f, 2.0f);
+            MoHinh_CauThang.addVertex(point3(xx, yy - 0.5f, zz));
+            MoHinh_CauThang.addVertex(point3(xx, yy - 0.5f, zz - 5.0f));
 
-	pTuongTrcTrai = point3(-7.05f, -0.10f, zTrc);
-	pTuongTrcPhai = point3(7.05f, -0.10f, zTrc);
-	pTuongTren = point3(0.0f, 1.0f, zTrc);
-	pTuongSau = point3(0.0f, -0.15f, zSau);
-	pTuongTrai = point3(-wNha / 2.0f, -0.15f, zTam);
-	pTuongPhai = point3(wNha / 2.0f, -0.15f, zTam);
-}
+            MoHinh_CauThang.addVertex(point3(xx + 0.5f, yy - 0.5f, zz));
+            MoHinh_CauThang.addVertex(point3(xx + 0.5f, yy - 0.5f, zz - 5.0f));
 
-// Phan chan tuong xam, kinh tang tret, khung cua va san ben trong.
-// Cua vao la khoang rong giua hai mang kinh, camera co the di qua.
-void taoLoiVao() {
-	taoHop(&mKinh, "data/glass.bmp", 10.0f, 1.48f, 0.10f, 2.0f, 1.0f);
-	taoHop(&mChanBen, "data/nen.bmp", 0.12f, 1.48f, dNha + 0.6f, 1.0f, 2.0f);
-	taoHop(&mChanSau, "data/nen.bmp", wNha + 0.6f, 1.48f, 0.12f, 3.0f, 1.0f);
-	taoHop(&mLam, "data/nen.bmp", 24.0f, 0.85f, 0.06f, 4.0f, 1.0f);
-	taoHop(&mKhungBen, "data/nen.bmp", 0.18f, 2.5f, 0.20f, 1.0f, 1.0f);
-	taoHop(&mKhungTren, "data/nen.bmp", 4.6f, 0.20f, 0.20f, 1.0f, 1.0f);
-	taoMatXZCat(&mSan, "data/nenbongro.bmp", 20.0f, 10.5f, 0.0f, 0.0f, 1.0f, 0.68f);
-	taoMatXZ(&mDuong, "data/nen.bmp", 4.6f, 7.0f, 1.0f, 2.0f);
+            MoHinh_CauThang.addVertex(point3(xx + 0.5f, yy - 1.0f, zz));
+            MoHinh_CauThang.addVertex(point3(xx + 0.5f, yy - 1.0f, zz - 5.0f));
 
-	pKinhTrai = point3(-7.15f, yDat, zTrc + 0.12f);
-	pKinhPhai = point3(7.15f, yDat, zTrc + 0.12f);
-	pChanTrai = point3(-wNha / 2.0f - 0.12f, yDat, zTam);
-	pChanPhai = point3(wNha / 2.0f + 0.12f, yDat, zTam);
-	pChanSau = point3(0.0f, yDat, zSau - 0.12f);
-	pLam = point3(0.0f, 3.90f, zTrc + 0.16f);
-	pKhungTrai = point3(-2.35f, yDat, zTrc + 0.22f);
-	pKhungPhai = point3(2.35f, yDat, zTrc + 0.22f);
-	pKhungTren = point3(0.0f, 0.85f, zTrc + 0.22f);
-	pSan = point3(0.0f, yDat + 0.02f, zTam);
-	pDuong = point3(0.0f, yDat + 0.01f, zTrc + 3.4f);
-}
+            MoHinh_CauThang.addQuad(quadIndex(
+                vertex_index, vertex_index + 1, vertex_index + 3, vertex_index + 2,
+                texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)
+            ));
+            MoHinh_CauThang.addQuad(quadIndex(
+                vertex_index + 2, vertex_index + 3, vertex_index + 5, vertex_index + 4,
+                texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)
+            ));
 
-// Cua so chi la cac khoi mong gan len mat tien.
-void taoCuaSo() {
-	taoHop(&mCsCao, "data/glass.bmp", 0.42f, 1.0f, 0.06f, 1.0f, 1.0f);
-	taoHop(&mCsNho, "data/glass.bmp", 0.36f, 0.40f, 0.06f, 1.0f, 1.0f);
-}
+            vertex_index += 6;
+        }
 
-void taoNha() {
-	taoTuong();
-	taoLoiVao();
-	taoCuaSo();
-}
+        vitri_cau_thang = point3(0, 0, 0);
+    }
 
-void veCuaSo() {
-	Vector3 p;
 
-	for (int i = 0; i < 9; i++) {
-		p = point3(-8.0f + i * 2.0f, 1.95f, zTrc + 0.20f);
-		ve(&mCsCao, p);
-	}
-	for (int i = 0; i < 7; i++) {
-		p = point3(-6.0f + i * 2.0f, 3.05f, zTrc + 0.20f);
-		ve(&mCsNho, p);
-	}
-}
+    void tao_san_go() {
+        MoHinh_SanGo.clear();
+        MoHinh_SanGo.setTextureFromBMP("data/Wood.bmp");
+        MoHinh_SanGo.addVertex(point3(-15.0, 0, 15.0));
+        MoHinh_SanGo.addVertex(point3(-15.0, 0, -15.0));
+        MoHinh_SanGo.addVertex(point3(15.0, 0, -15.0));
+        MoHinh_SanGo.addVertex(point3(15.0, 0, 15.0));
+        MoHinh_SanGo.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 10), texCoord2(10, 10), texCoord2(10, 0), texCoord2(0, 0)));
+        vitri_san_go = point3(0.0f, 3.1f, 0.0f);
+    }
 
-void veNha() {
-	veMau(&mSan, pSan, 0.78f, 0.78f, 0.74f);
-	veMau(&mDuong, pDuong, 0.70f, 0.70f, 0.66f);
+    void thay_doi_kich_thuoc_cua_so(int chieu_rong, int chieu_cao) {
+        if (chieu_cao == 0) chieu_cao = 1;
+        const float ti_le_khung_hinh = (float)chieu_rong / (float)chieu_cao;
+        glViewport(0, 0, chieu_rong, chieu_cao);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(45.0f, ti_le_khung_hinh, 0.1f, 1000.0f);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+    }
 
-	veMau(&mTuongTrai, pTuongTrai, 0.78f, 0.67f, 0.55f);
-	veMau(&mTuongPhai, pTuongPhai, 0.78f, 0.67f, 0.55f);
-	veMau(&mTuongSau, pTuongSau, 0.78f, 0.67f, 0.55f);
-	veMau(&mTuongTrc, pTuongTrcTrai, 0.78f, 0.67f, 0.55f);
-	veMau(&mTuongTrc, pTuongTrcPhai, 0.78f, 0.67f, 0.55f);
-	veMau(&mTuongTren, pTuongTren, 0.78f, 0.67f, 0.55f);
+    void hien_thi_man_hinh()
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
 
-	veMau(&mKinh, pKinhTrai, 0.72f, 0.90f, 0.96f);
-	veMau(&mKinh, pKinhPhai, 0.72f, 0.90f, 0.96f);
-	veMau(&mChanBen, pChanTrai, 0.72f, 0.90f, 0.96f);
-	veMau(&mChanBen, pChanPhai, 0.72f, 0.90f, 0.96f);
-	veMau(&mChanSau, pChanSau, 0.72f, 0.90f, 0.96f);
-	veMau(&mLam, pLam, 0.10f, 0.16f, 0.18f);
-	veMau(&mKhungBen, pKhungTrai, 0.18f, 0.20f, 0.21f);
-	veMau(&mKhungBen, pKhungPhai, 0.18f, 0.20f, 0.21f);
-	veMau(&mKhungTren, pKhungTren, 0.18f, 0.20f, 0.21f);
+        gluLookAt(
+            camera_X, 2.0f, camera_Z,
+            camera_X + vector_huong_X, 2.0f + do_cao_huong_nhin, camera_Z + vector_huong_Z,
+            0.0f, 1.0f, 0.0f
+        );
 
-	veCuaSo();
+        glPushMatrix();
+        glColor3f(1.0f, 1.0f, 1.0f);
 
-	veMau(&mMai, pMai, 1.0f, 1.0f, 1.0f);
-	veMau(&mDauMai, pDauMai, 1.0f, 1.0f, 1.0f);
-}
+        ve_mo_hinh(&MoHinh_Tuong2, vitri_tuong1);
+        ve_mo_hinh(&MoHinh_SanNha, vitri_san_nha);
+        ve_mo_hinh(&MoHinh_SanGo, vitri_san_go);
+        ve_mo_hinh(&MoHinh_CauThang, vitri_cau_thang);
+        ve_mo_hinh(&MoHinh_BauTroi, vitri_bau_troi);
+        ve_mo_hinh(&Kinh, vitri_kinh);
+        ve_mo_hinh(&Kinh, vitri_kinh1);
+        ve_mo_hinh(&Kinh, vitri_kinh2);
+        ve_mo_hinh(&Kinh, vitri_kinh3);
+        ve_mo_hinh(&Kinh, vitri_kinh4);
+        ve_mo_hinh(&Kinh, vitri_kinh5);
+        ve_mo_hinh(&Cua, vitri_cua);
 
-void resize(int w, int h) {
-	if (h == 0) h = 1;
-	const float ar = (float)w / (float)h;
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, ar, 0.1f, 1000.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
+        for (int h = 0; h < 9; h++) {
+            ve_mo_hinh(&MoHinh_cot, vitri_cot[h]);
+        }
 
-void display(void) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+        glPopMatrix();
 
-	gluLookAt(
-		camX, 2.0f, camZ,                            // Vị trí camera
-		camX + lx, 2.0f + height_view, camZ + lz,    // Điểm nhìn tới
-		0.0f, 1.0f, 0.0f                             // Trục Y hướng lên
-	);
+        glutSolidSphere(5, 32, 32);
 
-	glEnable(GL_TEXTURE_2D);
+        glutSwapBuffers();
+    }
 
-	ve(&mSky, pSky);
-	ve(&mSkyTop, pSkyTop);
-	ve(&mCo, pCo);
-	veNha();
+    void xu_ly_phim_thuong(unsigned char phim_bam, int toa_do_chuot_X, int toa_do_chuot_Y) {
+        switch (phim_bam) {
+        case '>':
+            toc_do_di_chuyen += 0.1f;
+            break;
+        case '<':
+            toc_do_di_chuyen -= 0.1f;
+            break;
+        case 'w':
+            if (goc_quay_doc < 1.5f) {
+                goc_quay_doc += 0.05f;
+                do_cao_huong_nhin = sin(goc_quay_doc);
+            }
+            break;
+        case 's':
+            if (goc_quay_doc > (-1.5f)) {
+                goc_quay_doc -= 0.05f;
+                do_cao_huong_nhin = sin(goc_quay_doc);
+            }
+            break;
+        case 'a':
+            goc_quay_ngang -= 0.05f;
+            vector_huong_X = cos(goc_quay_ngang);
+            vector_huong_Z = sin(goc_quay_ngang);
+            break;
+        case 'd':
+            goc_quay_ngang += 0.05f;
+            vector_huong_X = cos(goc_quay_ngang);
+            vector_huong_Z = sin(goc_quay_ngang);
+            break;
+        }
+        glutPostRedisplay();
+    }
 
-	glutSwapBuffers();
-	glFlush();
-}
+    void xu_ly_phim_dac_biet(int phim_bam, int toa_do_chuot_X, int toa_do_chuot_Y) {
+        float he_so_di_chuyen = toc_do_di_chuyen;
+        switch (phim_bam) {
+        case GLUT_KEY_LEFT:
+            camera_X += vector_huong_Z * he_so_di_chuyen;
+            camera_Z -= vector_huong_X * he_so_di_chuyen;
+            break;
+        case GLUT_KEY_RIGHT:
+            camera_X -= vector_huong_Z * he_so_di_chuyen;
+            camera_Z += vector_huong_X * he_so_di_chuyen;
+            break;
+        case GLUT_KEY_UP:
+            camera_X += vector_huong_X * he_so_di_chuyen;
+            camera_Z += vector_huong_Z * he_so_di_chuyen;
+            break;
+        case GLUT_KEY_DOWN:
+            camera_X -= vector_huong_X * he_so_di_chuyen;
+            camera_Z -= vector_huong_Z * he_so_di_chuyen;
+            break;
+        }
+        glutPostRedisplay();
+    }
 
-void processKeys(unsigned char key, int xx, int yy) {
-	switch (key) {
-	case '>':
-		speed += 0.1f;
-		break;
-	case '<':
-		speed -= 0.1f;
-		break;
-	case 'w': // Ngẩng lên
-		if (heightAngle < 1.5f) {
-			heightAngle += 0.05f;
-			height_view = sin(heightAngle);
-		}
-		break;
-	case 's': // Cúi xuống
-		if (heightAngle > (-1.5f)) {
-			heightAngle -= 0.05f;
-			height_view = sin(heightAngle);
-		}
-		break;
-	case 'a': // Xoay trái
-		angle -= 0.05f;
-		lx = cos(angle);
-		lz = sin(angle);
-		break;
-	case 'd': // Xoay phải
-		angle += 0.05f;
-		lx = cos(angle);
-		lz = sin(angle);
-		break;
-	}
-	glutPostRedisplay();
-}
+    void khoi_tao_ban_dau()
+    {
+        glClearColor(0, 0, 0, 1);
+        glEnable(GL_DEPTH_TEST);
 
-void processSpecialKeys(int key, int xx, int yy) {
-	float fraction = speed;
-	switch (key) {
-	case GLUT_KEY_LEFT: // Đi ngang sang trái
-		camX += lz * fraction;
-		camZ -= lx * fraction;
-		break;
-	case GLUT_KEY_RIGHT: // Đi ngang sang phải
-		camX -= lz * fraction;
-		camZ += lx * fraction;
-		break;
-	case GLUT_KEY_UP: // Tiến tới trước
-		camX += lx * fraction;
-		camZ += lz * fraction;
-		break;
-	case GLUT_KEY_DOWN: // Lùi về sau
-		camX -= lx * fraction;
-		camZ -= lz * fraction;
-		break;
-	}
-	glutPostRedisplay();
-}
+        glEnable(GL_TEXTURE_2D);
 
-void init() {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        tao_tuong_2();
+        // tao_tuong_1();
+        tao_san_go();
+        tao_san_nha();
+        tao_kinh();
+        tao_cua();
+        tao_bau_troi();
+        tao_cot();
+        tao_cau_thang();
 
-	lx = cos(angle);
-	lz = sin(angle);
+        vector_huong_X = cos(goc_quay_ngang);
+        vector_huong_Z = sin(goc_quay_ngang);
+        do_cao_huong_nhin = sin(goc_quay_doc);
+    }
 
-	taoSky();
-	taoSkyTop();
-	taoCo();
-	taoNha();
-}
+    int main(int argc, char** argv)
+    {
+        glutInit(&argc, argv);
 
-int main(int argc, char** argv) {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(800, 600);
-	glutCreateWindow("NHA THI DAU Hau");
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-	glutDisplayFunc(display);
-	glutReshapeFunc(resize);
-	glutIdleFunc(display);
-	glutKeyboardFunc(processKeys);
-	glutSpecialFunc(processSpecialKeys);
+        glutInitWindowPosition(50, 50);
+        glutInitWindowSize(600, 600);
+        glutCreateWindow("ntdhau");
 
-	init();
-	glutMainLoop();
-	return 0;
-}
+        glutDisplayFunc(hien_thi_man_hinh);
+        glutReshapeFunc(thay_doi_kich_thuoc_cua_so);
+        glutKeyboardFunc(xu_ly_phim_thuong);
+        glutSpecialFunc(xu_ly_phim_dac_biet);
 
-}
+        khoi_tao_ban_dau();
+
+        glutMainLoop();
+
+        return 0;
+    }
+};
