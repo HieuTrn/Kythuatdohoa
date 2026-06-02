@@ -6,10 +6,10 @@
 
 namespace ntdhau {
 
-    TextureModel MoHinh_Tuong1, MoHinh_Tuong2, MoHinh_SanNha, MoHinh_SanGo, MoHinh_BauTroi, MoHinh_cot, MoHinh_CauThang, Kinh, Cua;
+    TextureModel MoHinh_Tuong1, MoHinh_Tuong2, MoHinh_SanNha, MoHinh_SanGo, MoHinh_BauTroi, MoHinh_cot, MoHinh_CauThang, Kinh, Cua, MoHinh_thancay, MoHinh_lacay, Mai_nha, Lan_can;
 
-    Vector3 vitri_tuong1, vitri_tuong2, vitri_tuong3, vitri_tuong4, vitri_san_nha, vitri_san_go, vitri_bau_troi, vitri_cot[9], vitri_cau_thang, 
-        vitri_kinh, vitri_kinh1, vitri_kinh2, vitri_kinh3, vitri_kinh4, vitri_kinh5, vitri_cua;
+    Vector3 vitri_tuong1, vitri_tuong2, vitri_tuong3, vitri_tuong4, vitri_san_nha, vitri_san_go, vitri_bau_troi, vitri_cot[9], vitri_cau_thang, vitri_mainha,
+        vitri_kinh, vitri_kinh1, vitri_kinh2, vitri_kinh3, vitri_kinh4, vitri_kinh5, vitri_cua, vitri_cua1, vitri_thancay[13], vitri_lan_can;
 
     float camera_X = 5.0f, camera_Z = 55.0f;
     float vector_huong_X = 0.0f, vector_huong_Z = -1.0f;
@@ -24,6 +24,7 @@ namespace ntdhau {
         mo_hinh->draw();
         glPopMatrix();
     }
+
     void tao_bau_troi() {
         MoHinh_BauTroi.clear();
         MoHinh_BauTroi.setTextureFromBMP("data/sky.bmp");
@@ -48,22 +49,80 @@ namespace ntdhau {
         vitri_bau_troi = point3(0, 0, 0);
     }
 
+    void tao_lancan() {
+        Lan_can.clear();
+        Lan_can.setTextureFromBMP("data/wood.bmp");
+        Lan_can.addVertex(point3(-15.0f, 0.0f, 0.5f)); //0
+        Lan_can.addVertex(point3(15.0f, 0.0f, 0.5f)); //1
+        Lan_can.addVertex(point3(15.0f, 0.0f, -0.5f)); //2
+		Lan_can.addVertex(point3(-12.5f, 0.0f, -0.5f)); //3
+
+        Lan_can.addVertex(point3(-12.5f, 0.0f, -4.5f)); //4
+        Lan_can.addVertex(point3(-15.0f, 0.0f, -4.5f));  //5
+        
+        Lan_can.addVertex(point3(-12.5f, -2.0f, -4.5f)); //6
+        Lan_can.addVertex(point3(-15.0f, -2.0f, -4.5f));  //7
+
+        Lan_can.addVertex(point3(-15.0f, -2.0f, 0.5f)); //8
+        Lan_can.addVertex(point3(15.0f, -2.0f, 0.5f)); //9
+        Lan_can.addVertex(point3(15.0f, -2.0f, -0.5f)); //10
+        Lan_can.addVertex(point3(-12.5f, -2.0f, -0.5f)); //11
+
+        Lan_can.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        Lan_can.addQuad(quadIndex(0, 3, 4, 5, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        Lan_can.addQuad(quadIndex(5, 0, 8, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        Lan_can.addQuad(quadIndex(0, 8, 9, 1, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        Lan_can.addQuad(quadIndex(3, 0, 8, 11, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        vitri_lan_can = point3(0.0f, 5.0f, 19.5f);
+    }
+
+    void tao_mainha() {
+        Mai_nha.clear();
+        Mai_nha.setTextureFromBMP("data/roofpro.bmp");
+        Mai_nha.addVertex(point3(-15.0f, 10.0f, 5.0f)); //0
+        Mai_nha.addVertex(point3(-10.0f, 14.0f, 5.0f)); //1
+        Mai_nha.addVertex(point3(-5.0f, 17.0f, 5.0f)); //2
+        Mai_nha.addVertex(point3(5.0f, 17.0f, 5.0f)); //3
+        Mai_nha.addVertex(point3(10.0f, 14.0f, 5.0f)); //4
+        Mai_nha.addVertex(point3(15.0f, 10.0f, 5.0f)); //5
+
+        Mai_nha.addVertex(point3(-15.0f, 10.0f, -30.0f)); // 6
+        Mai_nha.addVertex(point3(-10.0f, 14.0f, -30.0f)); // 7
+        Mai_nha.addVertex(point3(-5.0f, 17.0f, -30.0f));  // 8
+        Mai_nha.addVertex(point3(5.0f, 17.0f, -30.0f));   // 9
+        Mai_nha.addVertex(point3(10.0f, 14.0f, -30.0f));  // 10
+        Mai_nha.addVertex(point3(15.0f, 10.0f, -30.0f));  //11
+
+        Mai_nha.addQuad(quadIndex(0, 5, 4, 1, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(1, 4, 3, 2, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(6, 11, 10, 7, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(7, 10, 9, 8, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+
+        Mai_nha.addQuad(quadIndex(6, 7, 1, 0, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(7, 8, 2, 1, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(8, 9, 3, 2, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(9, 10, 4, 3, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(10, 11, 5, 4, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        Mai_nha.addQuad(quadIndex(6, 11, 5, 0, texCoord2(0, 1), texCoord2(1, 1), texCoord2(1, 0), texCoord2(0, 0)));
+        vitri_mainha = point3(0.0f, 3.0f, 15.0f);
+    }
+
     void tao_kinh() {
         Kinh.clear();
         Kinh.setTextureFromBMP("data/glass1.bmp");
-        Kinh.addVertex(point3(0.0f, 0.0f, 3.0f));
-        Kinh.addVertex(point3(0.0f, 0.0f, -3.0f));
-        Kinh.addVertex(point3(0.0f, 10.0f, -3.0f));
-        Kinh.addVertex(point3(0.0f, 10.0f, 3.0f));
-		Kinh.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
-		vitri_kinh = point3(15.1f, 3.0f, 12.0f);
-		vitri_kinh1 = point3(15.1f, 3.0f, 0.0f);
-		vitri_kinh2 = point3(15.1f, 3.0f, -12.0f);
-		vitri_kinh3 = point3(-15.1f, 3.0f, 12.0f);
-		vitri_kinh4 = point3(-15.1f, 3.0f, 0.0f);
-		vitri_kinh5 = point3(-15.1f, 3.0f, -12.0f);
+        Kinh.addVertex(point3(0.0f, 0.0f, 1.0f));
+        Kinh.addVertex(point3(0.0f, 0.0f, -1.0f));
+        Kinh.addVertex(point3(0.0f, 10.0f, -4.0f));
+        Kinh.addVertex(point3(0.0f, 10.0f, 4.0f));
+        Kinh.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        vitri_kinh = point3(15.1f, 3.0f, 11.0f);
+        vitri_kinh1 = point3(15.1f, 3.0f, 0.0f);
+        vitri_kinh2 = point3(15.1f, 3.0f, -11.0f);
+        vitri_kinh3 = point3(-15.1f, 3.0f, 11.0f);
+        vitri_kinh4 = point3(-15.1f, 3.0f, 0.0f);
+        vitri_kinh5 = point3(-15.1f, 3.0f, -11.0f);
     }
-    
+
     void tao_cua() {
         Cua.clear();
         Cua.setTextureFromBMP("data/door3.bmp");
@@ -72,7 +131,8 @@ namespace ntdhau {
         Cua.addVertex(point3(2.5f, 5.0f, 0.0f));
         Cua.addVertex(point3(-2.5f, 5.0f, 0.0f));
         Cua.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
-		vitri_cua = point3(10.0f, 3.0f, 15.1f);
+        vitri_cua = point3(10.0f, 3.0f, 15.1f);
+        vitri_cua1 = point3(-10.0f, 3.0f, 15.1f);
     }
 
     void tao_san_nha() {
@@ -109,21 +169,21 @@ namespace ntdhau {
 
     void tao_cot() {
         MoHinh_cot.clear();
-        MoHinh_cot.setTextureFromBMP("data/nen.bmp");
+        MoHinh_cot.setTextureFromBMP("data/wall.bmp");
 
-        MoHinh_cot.addVertex(point3(1.0, 0, 1.0));
-        MoHinh_cot.addVertex(point3(1.0, 0, -1.0));
-        MoHinh_cot.addVertex(point3(-1.0, 0, -1.0));
-        MoHinh_cot.addVertex(point3(-1.0, 0, 1.0));
-        MoHinh_cot.addVertex(point3(1.0, 3, 1.0));
-        MoHinh_cot.addVertex(point3(1.0, 3, -1.0));
-        MoHinh_cot.addVertex(point3(-1.0, 3, -1.0));
-        MoHinh_cot.addVertex(point3(-1.0, 3, 1.0));
+        MoHinh_cot.addVertex(point3(1.0, 0, 1.0)); //0
+        MoHinh_cot.addVertex(point3(1.0, 0, -1.0)); //1
+        MoHinh_cot.addVertex(point3(-1.0, 0, -1.0)); //2
+        MoHinh_cot.addVertex(point3(-1.0, 0, 1.0)); //3
+        MoHinh_cot.addVertex(point3(1.0, 3, 1.0)); //4
+        MoHinh_cot.addVertex(point3(1.0, 3, -1.0)); //5
+        MoHinh_cot.addVertex(point3(-1.0, 3, -1.0)); //6
+        MoHinh_cot.addVertex(point3(-1.0, 3, 1.0)); //7
         MoHinh_cot.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
-        MoHinh_cot.addQuad(quadIndex(0, 1, 4, 5, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
-        MoHinh_cot.addQuad(quadIndex(0, 3, 7, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
-        MoHinh_cot.addQuad(quadIndex(3, 7, 6, 2, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(0, 1, 5, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
         MoHinh_cot.addQuad(quadIndex(1, 2, 6, 5, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(2, 3, 7, 6, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_cot.addQuad(quadIndex(0, 3, 7, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
         MoHinh_cot.addQuad(quadIndex(4, 5, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
 
         vitri_cot[0] = point3(0, 0, 0);
@@ -197,6 +257,65 @@ namespace ntdhau {
 
         vitri_cau_thang = point3(0, 0, 0);
     }
+    void tao_thancay() {
+        MoHinh_thancay.clear();
+        MoHinh_thancay.setTextureFromBMP("data/oak.bmp");
+
+        MoHinh_thancay.addVertex(point3(-0.5f, 0.0f, -0.5f));
+        MoHinh_thancay.addVertex(point3(0.5f, 0.0f, -0.5f));
+        MoHinh_thancay.addVertex(point3(0.5f, 5.0f, -0.5f));
+        MoHinh_thancay.addVertex(point3(-0.5f, 5.0f, -0.5f));
+        MoHinh_thancay.addVertex(point3(-0.5f, 0.0f, 0.5f));
+        MoHinh_thancay.addVertex(point3(0.5f, 0.0f, 0.5f));
+        MoHinh_thancay.addVertex(point3(0.5f, 5.0f, 0.5f));
+        MoHinh_thancay.addVertex(point3(-0.5f, 5.0f, 0.5f));
+        MoHinh_thancay.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1))); // truoc , phai , trai , sau , day , tren
+        MoHinh_thancay.addQuad(quadIndex(4, 5, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_thancay.addQuad(quadIndex(1, 5, 6, 2, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_thancay.addQuad(quadIndex(0, 3, 7, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_thancay.addQuad(quadIndex(0, 4, 5, 1, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_thancay.addQuad(quadIndex(3, 2, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+
+
+        vitri_thancay[0] = point3(-45, 0, 35);
+        vitri_thancay[1] = point3(-30, 0, 45);
+        vitri_thancay[2] = point3(-10, 0, 40);
+        vitri_thancay[3] = point3(15, 0, 42);
+        vitri_thancay[4] = point3(38, 0, 34);
+        vitri_thancay[5] = point3(45, 0, 10);
+        vitri_thancay[6] = point3(40, 0, -25);
+        vitri_thancay[7] = point3(-35, 0, -30);
+        vitri_thancay[8] = point3(-50, 0, 5);
+        vitri_thancay[9] = point3(-15, 0, -45);
+        vitri_thancay[10] = point3(5, 0, -48);
+        vitri_thancay[11] = point3(25, 0, -42);
+        vitri_thancay[12] = point3(55, 0, -5);
+
+
+
+    }
+
+    void tao_lacay() {
+        MoHinh_lacay.clear();
+        MoHinh_lacay.setTextureFromBMP("data/la.bmp");
+
+        MoHinh_lacay.addVertex(point3(-2.5f, 4.0f, -2.5f));
+        MoHinh_lacay.addVertex(point3(2.5f, 4.0f, -2.5f));
+        MoHinh_lacay.addVertex(point3(2.5f, 7.0f, -2.5f));
+        MoHinh_lacay.addVertex(point3(-2.5f, 7.0f, -2.5f));
+        MoHinh_lacay.addVertex(point3(-2.5f, 4.0f, 2.5f));
+        MoHinh_lacay.addVertex(point3(2.5f, 4.0f, 2.5f));
+        MoHinh_lacay.addVertex(point3(2.5f, 7.0f, 2.5f));
+        MoHinh_lacay.addVertex(point3(-2.5f, 7.0f, 2.5f));
+
+        MoHinh_lacay.addQuad(quadIndex(0, 1, 2, 3, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_lacay.addQuad(quadIndex(4, 5, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_lacay.addQuad(quadIndex(1, 5, 6, 2, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_lacay.addQuad(quadIndex(0, 3, 7, 4, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_lacay.addQuad(quadIndex(0, 4, 5, 1, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+        MoHinh_lacay.addQuad(quadIndex(3, 2, 6, 7, texCoord2(0, 0), texCoord2(1, 0), texCoord2(1, 1), texCoord2(0, 1)));
+    }
+
 
 
     void tao_san_go() {
@@ -247,9 +366,17 @@ namespace ntdhau {
         ve_mo_hinh(&Kinh, vitri_kinh4);
         ve_mo_hinh(&Kinh, vitri_kinh5);
         ve_mo_hinh(&Cua, vitri_cua);
+        ve_mo_hinh(&Cua, vitri_cua1);
+        ve_mo_hinh(&Mai_nha, vitri_mainha);
+		ve_mo_hinh(&Lan_can, vitri_lan_can);
+
 
         for (int h = 0; h < 9; h++) {
             ve_mo_hinh(&MoHinh_cot, vitri_cot[h]);
+        }
+        for (int i = 0; i < 13; i++) {
+            ve_mo_hinh(&MoHinh_thancay, vitri_thancay[i]);
+            ve_mo_hinh(&MoHinh_lacay, vitri_thancay[i]);
         }
 
         glPopMatrix();
@@ -323,15 +450,19 @@ namespace ntdhau {
 
         glEnable(GL_TEXTURE_2D);
 
+        tao_mainha();
         tao_tuong_2();
         // tao_tuong_1();
         tao_san_go();
         tao_san_nha();
+		tao_lancan();
         tao_kinh();
         tao_cua();
         tao_bau_troi();
         tao_cot();
         tao_cau_thang();
+        tao_thancay();
+        tao_lacay();
 
         vector_huong_X = cos(goc_quay_ngang);
         vector_huong_Z = sin(goc_quay_ngang);
