@@ -137,11 +137,6 @@
     <ClCompile Include="test1.cpp" />
     <ClCompile Include="test2.cpp" />
     <ClCompile Include="texturemodel.cpp" />
-    <ClCompile Include="vidu1.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="vidu10.cpp" />
     <ClCompile Include="vidu11.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
@@ -150,16 +145,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="vidu2.cpp" />
-    <ClCompile Include="vidu3_1.cpp" />
-    <ClCompile Include="vidu3_2.cpp" />
-    <ClCompile Include="vidu3_3.cpp" />
-    <ClCompile Include="vidu4.cpp" />
-    <ClCompile Include="vidu5.cpp" />
-    <ClCompile Include="vidu6.cpp" />
-    <ClCompile Include="vidu7.cpp" />
-    <ClCompile Include="vidu8.cpp" />
-    <ClCompile Include="vidu9.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glut\glut.h" />
